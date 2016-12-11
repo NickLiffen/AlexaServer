@@ -84,7 +84,7 @@ app.intent('setReminder',
 
 
   /* The Intent for Getting Reminders. It takes an input of everything in the utterances array. */
-  /*
+
 app.intent('getReminder',
   {
     "utterances":
@@ -96,5 +96,5 @@ app.intent('getReminder',
 
   }
 );
-*/
+
 module.exports = app;
