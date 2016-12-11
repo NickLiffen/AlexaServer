@@ -1,56 +1,66 @@
 module.change_code = 1;
 'use strict';
 
-var alexa = require( 'alexa-app' );
+// Requring our needed Node Modules.
 var https = require('https');
 var req = require('request');
-var app = new alexa.app( 'random' );
 var Promise = require("bluebird");
-var alexaText = 'Testing 123';
+var alexa = require('alexa-app');
+
+// Setting up the new Alexa Application - It is going to be called lilly.
+var app = new alexa.app('lilly');
+
+// Creating an empty string for the Alexa Test to be put into. This is going to be what Alexa says.
+var alexaText = '';
+
+// Connection string for Socket.IO - DO NOT DELETE
 var options = {
   uri: 'https://cryptic-sea-98015.herokuapp.com/reminders',
   method: 'GET',
 	headers:{accept:'*/*'}
 };
 
-//var io = require('socket.io')();
+// Connecting to the Reminder Application
 var socket = require('socket.io-client')('https://cryptic-sea-98015.herokuapp.com');
+
+// On a connection run the getRequest() function below.
 socket.on('connect', function(){
 	console.log('connecting to socket');
 	getRequest();
 });
+
+// On a request where there is a new reminder - run this function.
 socket.on('reminderpatient', function(data){
 	console.log('new event');
 	getRequest();
 });
+
+// On a request where a reminder needs to be deleted - run this functuion
 socket.on('patientDeleted',function(data){
 	console.log('item deleted');
 	getRequest();
 });
+
+// On a disconnection do nothing.
 socket.on('disconnect', function(){});
 
-
-app.launch( function( request, response ) {
-	response.say( 'Welcome to the reMINDer app. To get the your reminders ask "what are my reminders"' ).reprompt( 'Way to go. You got it to run. Bad ass.' ).shouldEndSession( false );
-} );
-
-
+// This function goes to the reminder application and gets all the reminders and then resolves them all.
 function getRequest(){
 	return new Promise(function(resolve) {
 		 req({url: 'https://cryptic-sea-98015.herokuapp.com/reminders'}, function (error, response, body) {
-		    // Do more stuff with 'body' here
 		 	 alexaText = body;
 		 	 console.log(response.body);
-		 	 resolve('body');
+		 	 resolve(response.body);
 		 });
-
-	  // 	req.get('https://cryptic-sea-98015.herokuapp.com/reminders').on('response', function(response) {
-		// 	alexaText = response.body;
-    //   resolve(response.body);
-    // });
-
 });
 }
+
+// Whenver the application is first opened - Alexa should say this command.
+app.launch( function(request, response) {
+	response.say( 'Welcome to the Reminder app. To get the your reminders ask "what are my reminders"' ).reprompt( 'Way to go. You got it to run. Bad ass.' ).shouldEndSession( false );
+} );
+
+// If there is an app error this command should print.
 app.error = function( exception, request, response ) {
 	console.log(exception)
 	console.log(request);
@@ -58,16 +68,9 @@ app.error = function( exception, request, response ) {
 	response.say( 'Sorry an error occured ' + error.message);
 };
 
-app.intent('sayThankYou',
-  {
-    "utterances":[
-		"say thank you"]
-  },
-  function(request,response) {
-    response.say('Thank you for listening to our presentation! Feel free to come over to our stand.');
-	});
-
-
+/* The Intent for Setting Reminders. It takes an input of the either
+  set the reminder OR remind me to. The {reminder} is a variable; this is the reminder the user wants to remember.
+*/
 app.intent('setReminder',
   {
 		"slots":{"reminder":"LIST_OF_REMINDERS"},
@@ -77,53 +80,22 @@ app.intent('setReminder',
   },
   function(request,response) {
 		var number = request.slot('reminder');
-    response.say('I wiill remind you to '+reminder);
+    response.say('I will remind you to '+ reminder);
 	});
 
-app.intent('getDom',
+  /* The Intent for Getting Reminders. It takes an input of everything in the utterances array. */
+app.intent('getReminder',
   {
     "utterances":[
 		"what are my reminders",
-		"remind me",
+		"reminders please",
 		"tell me what are my reminders",
-		"Can you tell me what are my reminders"]
+		"can you tell me what are my reminders"]
   },
   function(request,response) {
-		// https://cryptic-sea-98015.herokuapp.com/reminders
-	//	response.clear();
-		// Promise.all([getRequest()]).then(function(data){
-		// 	console.log(data[0]);
-		// 	response.clear();
-		// 	response.say(data[0]);
-		// 	response.card('reMINDer',data[0]);
-		// 	response.send();
-		// });
-
-		// req({url: 'https://cryptic-sea-98015.herokuapp.com/reminders'}, function (error, respon, body) {
-		//    // Do more stuff with 'body' here
-		// 	 response.clear();
-		// 	 console.log(body);
-		// 	 console.log(respon.body);
-		// 	 response.say(body).send();
-		// 	 response.card('help').send();
-		// });
-		// getRequest().then(function(data){
-		// 	console.log(data);
-		// 	response.say('data');
-		// });
-		//var text = getRequest();
-
-		//setTimeout(function(){
 		console.log(alexaText);
-		response.say(alexaText).send();
-		//response.card(alexaText).send();
-	//	response.card('reMINDer',JSON.stringify('Your reminders are: god knows it will not work!')).send();
-		//},1000);
-		//response.say(getRequest()).send();
+		response.say("Hello There").send();
 
-
-  //  var number = request.slot('number');
-    //response.say("You asked for the number "+number);
   }
 );
 
