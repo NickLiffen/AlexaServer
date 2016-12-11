@@ -73,24 +73,21 @@ app.error = function( exception, request, response ) {
 */
 app.intent('setReminder',
   {
-		"slots":{"reminder":"LIST_OF_REMINDERS"},
-    "utterances":[
-		"set the reminder {reminder}",
-		"remind me to {reminder}"]
+		"slots":{ "reminder":"LIST_OF_REMINDERS" },
+    "utterances":
+    [ "set the reminder {reminder}"]
   },
   function(request,response) {
 		var number = request.slot('reminder');
     response.say('I will remind you to '+ reminder);
 	});
 
+
   /* The Intent for Getting Reminders. It takes an input of everything in the utterances array. */
 app.intent('getReminder',
   {
-    "utterances":[
-		"what are my reminders",
-		"reminders please",
-		"tell me what are my reminders",
-		"can you tell me what are my reminders"]
+    "utterances":
+    ["what are my reminders"]
   },
   function(request,response) {
 		console.log(alexaText);
