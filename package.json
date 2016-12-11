@@ -5,7 +5,7 @@
   "main": "server.js",
   "dependencies": {
     "alexa-app": "^2.3.4",
-    "alexa-app-server": "^2.2.4",
+    "alexa-app-server": "^2.3.1",
     "bluebird": "^3.4.6",
     "https": "^1.0.0",
     "request": "^2.79.0",

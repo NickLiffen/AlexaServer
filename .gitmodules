@@ -1,3 +1,0 @@
-[submodule "apps/AlexaSkill"]
-	path = apps/AlexaSkill
-	url = https://github.com/NickLiffen/AlexaSkill.git
