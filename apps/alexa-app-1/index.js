@@ -1,65 +1,56 @@
 module.change_code = 1;
-
 'use strict';
 
+var alexa = require( 'alexa-app' );
 var https = require('https');
 var req = require('request');
+var app = new alexa.app( 'reminder' );
 var Promise = require("bluebird");
-var io = require('socket.io')();
-var socket = require('socket.io-client')('https://cryptic-sea-98015.herokuapp.com');
-
-// Setting up Alexa.
-var alexa = require('alexa-app');
-var app = new alexa.app('Questions');
-
-//Test for alexa
 var alexaText = 'Testing 123';
-
-//Getting data from a Heroku Application (This is a reminders example)
 var options = {
   uri: 'https://cryptic-sea-98015.herokuapp.com/reminders',
   method: 'GET',
 	headers:{accept:'*/*'}
 };
 
-//Connecting to the Heroku Application using Sockets
+//var io = require('socket.io')();
+var socket = require('socket.io-client')('https://cryptic-sea-98015.herokuapp.com');
 socket.on('connect', function(){
 	console.log('connecting to socket');
 	getRequest();
 });
-
-//Setting an event called reminderPatient. This is a new event for Alexa.
 socket.on('reminderpatient', function(data){
 	console.log('new event');
 	getRequest();
 });
-
-//Setting an event called patientDeleted. This is a new event for Alexa.
 socket.on('patientDeleted',function(data){
 	console.log('item deleted');
 	getRequest();
 });
-
-//Disconnecting from Socket.io to the Heroku Application
 socket.on('disconnect', function(){});
 
-//Launcing the Alexa application - this is the first thing that will be said.
+
 app.launch( function( request, response ) {
-	response.say( 'Welcome to the Reminder application. To get the your reminders ask "what are my reminders"' ).reprompt('Way to go. You got it to run. Bad ass.').shouldEndSession( false );
+	response.say( 'Welcome to the reMINDer app. To get the your reminders ask "what are my reminders"' ).reprompt( 'Way to go. You got it to run. Bad ass.' ).shouldEndSession( false );
 } );
 
-//Function to get all the reminders from the heroku application.
+
 function getRequest(){
 	return new Promise(function(resolve) {
 		 req({url: 'https://cryptic-sea-98015.herokuapp.com/reminders'}, function (error, response, body) {
-       // Putting the body of the response in a variable which Alexa can call.
+		    // Do more stuff with 'body' here
 		 	 alexaText = body;
 		 	 console.log(response.body);
 		 	 resolve('body');
 		 });
+
+	  // 	req.get('https://cryptic-sea-98015.herokuapp.com/reminders').on('response', function(response) {
+		// 	alexaText = response.body;
+    //   resolve(response.body);
+    // });
+
 });
 }
-//If there is an error with the Alexa Application this is going to spit the error out.
 app.error = function( exception, request, response ) {
 	console.log(exception)
 	console.log(request);
@@ -67,7 +58,16 @@ app.error = function( exception, request, response ) {
 	response.say( 'Sorry an error occured ' + error.message);
 };
 
-//This
+app.intent('sayThankYou',
+  {
+    "utterances":[
+		"say thank you"]
+  },
+  function(request,response) {
+    response.say('Thank you for listening to our presentation! Feel free to come over to our stand.');
+	});
+
+
 app.intent('setReminder',
   {
 		"slots":{"reminder":"LIST_OF_REMINDERS"},
