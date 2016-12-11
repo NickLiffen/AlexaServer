@@ -94,7 +94,7 @@ app.intent('getReminder',
   },
   function(request,response) {
 		console.log(alexaText);
-		response.say("Hello There").send();
+		response.say(alexaText).send();
 
   }
 );
