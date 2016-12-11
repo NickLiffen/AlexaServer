@@ -2,13 +2,15 @@ module.change_code = 1;
 
 'use strict';
 
-var alexa = require('alexa-app');
 var https = require('https');
 var req = require('request');
-var app = new alexa.app( 'reminder' );
 var Promise = require("bluebird");
 var io = require('socket.io')();
 var socket = require('socket.io-client')('https://cryptic-sea-98015.herokuapp.com');
+
+// Setting up Alexa.
+var alexa = require('alexa-app');
+var app = new alexa.app('question time');
 
 //Test for alexa
 var alexaText = 'Testing 123';
