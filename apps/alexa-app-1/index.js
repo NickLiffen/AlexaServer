@@ -10,7 +10,7 @@ var socket = require('socket.io-client')('https://cryptic-sea-98015.herokuapp.co
 
 // Setting up Alexa.
 var alexa = require('alexa-app');
-var app = new alexa.app('question time');
+var app = new alexa.app('Questions');
 
 //Test for alexa
 var alexaText = 'Testing 123';
