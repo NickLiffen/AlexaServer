@@ -68,20 +68,6 @@ app.error = function( exception, request, response ) {
 	response.say( 'Sorry an error occured ' + error.message);
 };
 
-/* The Intent for Setting Reminders. It takes an input of the either
-  set the reminder OR remind me to. The {reminder} is a variable; this is the reminder the user wants to remember.
-*/
-app.intent('setReminder',
-  {
-		"slots":{ "reminder":"LIST_OF_REMINDERS" },
-    "utterances":
-    [ "set the reminder {reminder}"]
-  },
-  function(request,response) {
-		var number = request.slot('reminder');
-    response.say('I will remind you to '+ reminder);
-	});
-
 
   /* The Intent for Getting Reminders. It takes an input of everything in the utterances array. */
 
