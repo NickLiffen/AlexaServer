@@ -79,6 +79,7 @@ function getDrugQuestionContent(){
     client.getEntry('4LgMotpNF6W20YKmuemW0a')
     .then(function (entry) {
       questionText = entry.fields.companyDescription;
+      console.log(entry.fields);
       resolve(entry.fields.companyDescription);
     })
 });
@@ -90,8 +91,8 @@ function getAlzheimersQuestionContent(){
     // This API call will request an entry with the specified ID from the space defined at the top, using a space-specific access token.
     client.getEntry('4LgMotpNF6W20YKmuemW0a')
     .then(function (entry) {
-      questionText = entry.fields.companyDescription;
-      resolve(entry.fields.companyDescription);
+      alzheimersText = entry.fields.companyName;
+      resolve(entry.fields.companyName);
     })
 });
 }
@@ -142,7 +143,7 @@ app.intent('AlzheimersLilly',
     ["what can i do to help with my Alzheimers"]
   },
   function(request,response) {
-		response.say(questionText).send();
+		response.say(alzheimersText).send();
 
   }
 );
