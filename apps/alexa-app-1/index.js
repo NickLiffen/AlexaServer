@@ -75,7 +75,8 @@ function getContent(){
     // This API call will request an entry with the specified ID from the space defined at the top, using a space-specific access token.
     client.getEntry('4LgMotpNF6W20YKmuemW0a')
     .then(function (entry) {
-      console.log(entry.fields.companyDescription);
+      questionText = entry.fields.companyDescription;
+      resolve(entry.fields.companyDescription);
       //console.log(util.inspect(entry.fields.companyDescription, {depth: null}))
     })
 });
