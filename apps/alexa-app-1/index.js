@@ -21,9 +21,9 @@ var client = contentful.createClient({
 var app = new alexa.app('lilly');
 
 // Creating an empty string for the Alexa Test to be put into. This is going to be what Alexa says.
-var alexaText = '';
-
+var reminderText = '';
 var questionText = '';
+var alzheimersText = '';
 
 // Connection string for Socket.IO - DO NOT DELETE
 var options = {
@@ -38,46 +38,60 @@ var socket = require('socket.io-client')('https://cryptic-sea-98015.herokuapp.co
 // On a connection run the getRequest() function below.
 socket.on('connect', function(){
 	console.log('connecting to socket');
-	getRequest();
-  getContent();
+	getReminderContent();
+  getDrugQuestionContent();
+  getAlzheimersQuestionContent();
 });
 
 // On a request where there is a new reminder - run this function.
 socket.on('reminderpatient', function(data){
 	console.log('new event');
-	getRequest();
-  getContent();
+	getReminderContent();
+  getDrugQuestionContent();
+  getAlzheimersQuestionContent();
 });
 
 // On a request where a reminder needs to be deleted - run this functuion
 socket.on('patientDeleted',function(data){
 	console.log('item deleted');
-	getRequest();
-  getContent();
+	getReminderContent();
+  getDrugQuestionContent();
+  getAlzheimersQuestionContent();
 });
 
 // On a disconnection do nothing.
 socket.on('disconnect', function(){});
 
 // This function goes to the reminder application and gets all the reminders and then resolves them all.
-function getRequest(){
+function getReminderContent(){
 	return new Promise(function(resolve) {
 		 req({url: 'https://cryptic-sea-98015.herokuapp.com/reminders'}, function (error, response, body) {
-		 	 alexaText = body;
+		 	 reminderText = body;
 		 	 resolve(response.body);
 		 });
 });
 }
 
 // This function goes to the Contnetful Space and Gets informatino about the Questions and Answers
-function getContent(){
+function getDrugQuestionContent(){
   return new Promise(function(resolve) {
     // This API call will request an entry with the specified ID from the space defined at the top, using a space-specific access token.
     client.getEntry('4LgMotpNF6W20YKmuemW0a')
     .then(function (entry) {
       questionText = entry.fields.companyDescription;
       resolve(entry.fields.companyDescription);
-      //console.log(util.inspect(entry.fields.companyDescription, {depth: null}))
+    })
+});
+}
+
+// This function goes to the Contnetful Space and Gets informatino about the Questions and Answers
+function getAlzheimersQuestionContent(){
+  return new Promise(function(resolve) {
+    // This API call will request an entry with the specified ID from the space defined at the top, using a space-specific access token.
+    client.getEntry('4LgMotpNF6W20YKmuemW0a')
+    .then(function (entry) {
+      questionText = entry.fields.companyDescription;
+      resolve(entry.fields.companyDescription);
     })
 });
 }
@@ -104,9 +118,9 @@ app.intent('getReminder',
     ["what are my reminders"]
   },
   function(request,response) {
-    console.log(alexaText);
-		console.log(alexaText);
-		response.say(alexaText).send();
+    console.log(reminderText);
+		console.log(reminderText);
+		response.say(reminderText).send();
 
   }
 );
