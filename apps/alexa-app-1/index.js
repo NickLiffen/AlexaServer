@@ -47,17 +47,21 @@ socket.on('connect', function(){
 socket.on('reminderpatient', function(data){
 	console.log('new event');
 	getReminderContent();
-  getDrugQuestionContent();
-  getAlzheimersQuestionContent();
 });
 
 // On a request where a reminder needs to be deleted - run this functuion
 socket.on('patientDeleted',function(data){
 	console.log('item deleted');
 	getReminderContent();
-  getDrugQuestionContent();
-  getAlzheimersQuestionContent();
 });
+
+// Run theses functions to get the updated Data
+getDrugQuestionContent();
+getAlzheimersQuestionContent();
+
+
+setInterval(getDrugQuestionContent, 10*900);
+setInterval(getAlzheimersQuestionContent, 10*900);
 
 // On a disconnection do nothing.
 socket.on('disconnect', function(){});
@@ -76,11 +80,11 @@ function getReminderContent(){
 function getDrugQuestionContent(){
   return new Promise(function(resolve) {
     // This API call will request an entry with the specified ID from the space defined at the top, using a space-specific access token.
-    client.getEntry('4LgMotpNF6W20YKmuemW0a')
+    client.getEntry('24DPGBDeGEaYy8ms4Y8QMQ')
     .then(function (entry) {
-      questionText = entry.fields.companyDescription;
-      console.log(entry.fields);
-      resolve(entry.fields.companyDescription);
+      questionText = entry.fields.title;
+      console.log(entry.fields.title);
+      resolve(entry.fields.title);
     })
 });
 }
@@ -89,10 +93,11 @@ function getDrugQuestionContent(){
 function getAlzheimersQuestionContent(){
   return new Promise(function(resolve) {
     // This API call will request an entry with the specified ID from the space defined at the top, using a space-specific access token.
-    client.getEntry('4LgMotpNF6W20YKmuemW0a')
+    client.getEntry('24DPGBDeGEaYy8ms4Y8QMQ')
     .then(function (entry) {
-      alzheimersText = entry.fields.companyName;
-      resolve(entry.fields.companyName);
+      alzheimersText = entry.fields.categoryDescription;
+      console.log(entry.fields.categoryDescription);
+      resolve(entry.fields.categoryDescription);
     })
 });
 }
